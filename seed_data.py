@@ -20,7 +20,7 @@ if not MegaPayConfig.objects.exists():
         is_active=True,
         api_key='MGPY5nBRzeut',
         email='smilejaym711@gmail.com',
-        callback_url='https://swiftcash-ke-production.up.railway.app/mpesa/callback/'
+        callback_url='https://swiftloans.up.railway.app/mpesa/callback/'
     )
     print(f"✓ MegaPay Config created: {config.name}")
     print(f"  - API Key: {config.api_key[:5]}...")
