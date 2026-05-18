@@ -1,0 +1,41 @@
+{% extends 'loans/base.html' %}
+{% block title %}Privacy Policy | {{ config.site_name }}{% endblock %}
+{% block body %}
+<div class="page-wrapper">
+  <nav class="navbar">
+    <a href="/" class="navbar-brand">
+      <div class="brand-icon">T</div>
+      <span class="brand-name">{{ config.site_name }}</span>
+    </a>
+  </nav>
+  <div class="static-page">
+    <h2>Privacy Policy</h2>
+    <p>Last updated: January 2025</p>
+    <p>{{ config.site_name }} is committed to protecting your personal information. This Privacy Policy explains how we collect, use, and safeguard your data.</p>
+    <h3>Information We Collect</h3>
+    <p>We collect information you provide directly to us, including your full name, phone number, national ID number, and loan preferences when you apply for a loan.</p>
+    <h3>How We Use Your Information</h3>
+    <ul>
+      <li>To process your loan application and verify your identity</li>
+      <li>To initiate M-Pesa payment transactions</li>
+      <li>To communicate with you about your application status</li>
+      <li>To comply with legal and regulatory requirements</li>
+    </ul>
+    <h3>Data Security</h3>
+    <p>We use 256-bit SSL encryption to protect all data transmitted through our platform. Your personal information is stored securely and is never sold to third parties.</p>
+    <h3>M-Pesa Transactions</h3>
+    <p>Payment transactions are processed through Safaricom's M-Pesa platform. We do not store your M-Pesa PIN. Transaction records are maintained for regulatory compliance.</p>
+    <h3>Contact Us</h3>
+    <p>For privacy-related inquiries, contact us at privacy@talamkopo.co.ke</p>
+  </div>
+  <div style="height:80px;"></div>
+</div>
+<footer class="footer">
+  <div class="footer-links">
+    <a href="/privacy">Privacy</a>
+    <a href="/terms">Terms</a>
+    <a href="/contact">Contact</a>
+  </div>
+  <div class="footer-copy">{{ config.footer_text }}</div>
+</footer>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'loans/base.html' %}
+{% block title %}Payment Successful | {{ config.site_name }}{% endblock %}
+{% block body %}
+<div class="page-wrapper">
+  <nav class="navbar">
+    <a href="/" class="navbar-brand">
+      <div class="brand-icon">T</div>
+      <span class="brand-name">{{ config.site_name }}</span>
+    </a>
+  </nav>
+  <div class="success-card">
+    <div class="success-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <h2 class="success-title">Payment Successful!</h2>
+    <p class="success-subtitle">Your loan application has been received. Your loan will be disbursed to your M-Pesa shortly.</p>
+    {% if receipt %}
+    <div class="receipt-box">
+      M-Pesa Receipt Number:<br>
+      <strong>{{ receipt }}</strong>
+    </div>
+    {% endif %}
+    {% if name %}
+    <p style="font-size:15px;color:#374151;margin-bottom:16px;">Thank you, <strong>{{ name }}</strong>! We will process your loan of <strong>Ksh {{ amount }}</strong> immediately.</p>
+    {% endif %}
+    <a href="/" class="btn-primary" style="margin:0;">Apply for Another Loan</a>
+  </div>
+  <div style="height:80px;"></div>
+</div>
+<footer class="footer">
+  <div class="footer-links">
+    <a href="/privacy">Privacy</a>
+    <a href="/terms">Terms</a>
+    <a href="/contact">Contact</a>
+  </div>
+  <div class="footer-copy">{{ config.footer_text }}</div>
+</footer>
+{% endblock %}

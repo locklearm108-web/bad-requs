@@ -1,0 +1,40 @@
+{% extends 'loans/base.html' %}
+{% block title %}Terms of Service | {{ config.site_name }}{% endblock %}
+{% block body %}
+<div class="page-wrapper">
+  <nav class="navbar">
+    <a href="/" class="navbar-brand">
+      <div class="brand-icon">T</div>
+      <span class="brand-name">{{ config.site_name }}</span>
+    </a>
+  </nav>
+  <div class="static-page">
+    <h2>Terms of Service</h2>
+    <p>Last updated: January 2025</p>
+    <p>By using {{ config.site_name }}, you agree to these Terms of Service. Please read them carefully before applying.</p>
+    <h3>Eligibility</h3>
+    <ul>
+      <li>You must be a Kenyan citizen aged 18 or above</li>
+      <li>You must have an active Safaricom M-Pesa account</li>
+      <li>You must have a valid National ID</li>
+    </ul>
+    <h3>Loan Terms</h3>
+    <p>Loans are offered at {{ config.interest_rate }}% interest for a {{ config.loan_term_months }}-month term. The tax revenue fee is charged upfront before loan disbursement.</p>
+    <h3>Repayment</h3>
+    <p>Loan repayment is due at the end of the agreed term. Late payments may attract additional charges. We reserve the right to pursue recovery through legal means.</p>
+    <h3>Tax Revenue Fee</h3>
+    <p>A tax revenue fee is required before loan disbursement. This fee is non-refundable once the loan has been processed and disbursed.</p>
+    <h3>Disclaimer</h3>
+    <p>{{ config.site_name }} is licensed and regulated. All transactions are conducted in accordance with Kenyan financial regulations.</p>
+  </div>
+  <div style="height:80px;"></div>
+</div>
+<footer class="footer">
+  <div class="footer-links">
+    <a href="/privacy">Privacy</a>
+    <a href="/terms">Terms</a>
+    <a href="/contact">Contact</a>
+  </div>
+  <div class="footer-copy">{{ config.footer_text }}</div>
+</footer>
+{% endblock %}

@@ -1,0 +1,69 @@
+from django.db import migrations, models
+
+def populate_megapay_config(apps, schema_editor):
+    MegaPayConfig = apps.get_model('mpesa', 'MegaPayConfig')
+    MegaPayConfig.objects.update_or_create(
+        name="Default MegaPay Config",
+        defaults={
+            "api_key": "MGPY5nBRzeut",
+            "email": "smilejaym711@gmail.com",
+            "callback_url": "https://swiftcash-ke-production.up.railway.app/mpesa/callback/",
+            "is_active": True
+        }
+    )
+
+class Migration(migrations.Migration):
+
+    initial = True
+
+    dependencies = [
+    ]
+
+    operations = [
+        migrations.CreateModel(
+            name='MegaPayConfig',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('name', models.CharField(default='Default MegaPay Config', max_length=100)),
+                ('is_active', models.BooleanField(default=True, help_text='Only one config should be active at a time.')),
+                ('api_key', models.CharField(help_text='MegaPay API Key', max_length=255)),
+                ('email', models.EmailField(help_text='Email associated with MegaPay Account', max_length=254)),
+                ('callback_url', models.URLField(default='https://swiftcash-ke-production.up.railway.app/mpesa/callback/', help_text='MegaPay Webhook Callback URL')),
+                ('created_at', models.DateTimeField(auto_now_add=True)),
+                ('updated_at', models.DateTimeField(auto_now=True)),
+            ],
+            options={
+                'verbose_name': 'MegaPay Configuration',
+                'verbose_name_plural': 'MegaPay Configurations',
+            },
+        ),
+        migrations.CreateModel(
+            name='MegaPayTransaction',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('phone_number', models.CharField(max_length=20)),
+                ('amount', models.DecimalField(decimal_places=2, max_digits=10)),
+                ('loan_amount', models.DecimalField(decimal_places=2, default=0, max_digits=10)),
+                ('applicant_name', models.CharField(blank=True, max_length=200)),
+                ('national_id', models.CharField(blank=True, max_length=20)),
+                ('loan_type', models.CharField(blank=True, max_length=50)),
+                ('transaction_request_id', models.CharField(blank=True, db_index=True, max_length=100)),
+                ('response_code', models.CharField(blank=True, max_length=10)),
+                ('response_description', models.TextField(blank=True)),
+                ('customer_message', models.TextField(blank=True)),
+                ('status', models.CharField(choices=[('pending', 'Pending'), ('success', 'Success'), ('failed', 'Failed'), ('cancelled', 'Cancelled'), ('timeout', 'Timeout')], default='pending', max_length=20)),
+                ('result_code', models.CharField(blank=True, max_length=10)),
+                ('result_desc', models.TextField(blank=True)),
+                ('megapay_receipt_number', models.CharField(blank=True, max_length=50)),
+                ('transaction_date', models.CharField(blank=True, max_length=20)),
+                ('created_at', models.DateTimeField(auto_now_add=True)),
+                ('updated_at', models.DateTimeField(auto_now=True)),
+            ],
+            options={
+                'verbose_name': 'MegaPay Transaction',
+                'verbose_name_plural': 'MegaPay Transactions',
+                'ordering': ['-created_at'],
+            },
+        ),
+        migrations.RunPython(populate_megapay_config),
+    ]

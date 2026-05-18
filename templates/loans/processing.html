@@ -1,0 +1,94 @@
+{% extends 'loans/base.html' %}
+{% block title %}Processing Eligibility | {{ config.site_name }}{% endblock %}
+{% block body %}
+<div class="page-wrapper">
+  <div class="processing-card">
+    <div class="processing-badge">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      Secure Processing
+    </div>
+    <h2 class="processing-title">Processing Your Application</h2>
+    <div class="ssl-badge">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+      256-bit SSL Encryption
+    </div>
+    <div class="dots-loader">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+    <p class="processing-status" id="status-text">Verifying your details...</p>
+    <div class="progress-bar-wrap">
+      <div class="progress-label">
+        <span>Progress</span>
+        <span id="progress-pct">0%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+      </div>
+    </div>
+    <div class="processing-features">
+      <div class="proc-feature">🏛️ CBK Licensed</div>
+      <div class="proc-feature">⏱️ Instant Approval</div>
+      <div class="proc-feature">🔐 Data Protected</div>
+      <div class="proc-feature">💳 No Hidden Fees</div>
+    </div>
+  </div>
+  <div style="height:80px;"></div>
+</div>
+
+<footer class="footer-dark">
+  <div class="footer-links">
+    <a href="/privacy">Privacy Policy</a>
+    <a href="/terms">Terms of Service</a>
+    <a href="/contact">Contact Us</a>
+    <a href="/privacy">Security</a>
+  </div>
+  <div class="footer-copy">{{ config.footer_text }}</div>
+</footer>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const name = "{{ name|escapejs }}";
+const phone = "{{ phone|escapejs }}";
+const nationalId = new URLSearchParams(window.location.search).get('national_id') || '';
+const loanType = new URLSearchParams(window.location.search).get('loan_type') || '';
+
+const steps = [
+  {pct: 15, text: 'Verifying your details...'},
+  {pct: 35, text: 'Checking M-Pesa records...'},
+  {pct: 55, text: 'Contacting verification services...'},
+  {pct: 75, text: 'Analyzing credit profile...'},
+  {pct: 90, text: 'Finalizing your eligibility...'},
+  {pct: 100, text: 'Eligibility confirmed!'},
+];
+
+let step = 0;
+const fill = document.getElementById('progress-fill');
+const pct = document.getElementById('progress-pct');
+const statusText = document.getElementById('status-text');
+
+function advance() {
+  if (step < steps.length) {
+    const s = steps[step];
+    fill.style.width = s.pct + '%';
+    pct.textContent = s.pct + '%';
+    statusText.textContent = s.text;
+    step++;
+    if (step < steps.length) {
+      setTimeout(advance, 900 + Math.random() * 600);
+    } else {
+      setTimeout(redirect, 700);
+    }
+  }
+}
+
+function redirect() {
+  const params = new URLSearchParams({name, phone, national_id: nationalId, loan_type: loanType});
+  window.location.href = '/loan-offers?' + params.toString();
+}
+
+setTimeout(advance, 400);
+</script>
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends 'loans/base.html' %}
+{% block title %}{{ config.site_name }} — {{ config.tagline }}{% endblock %}
+{% block body %}
+<div class="page-wrapper">
+  <nav class="navbar">
+    <a href="/" class="navbar-brand">
+      <div class="brand-icon">S</div>
+      <span class="brand-name">{{ config.site_name }}</span>
+    </a>
+    <button class="btn-help" onclick="alert('For help, contact support@swiftcash.co.ke')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      Help
+    </button>
+  </nav>
+
+  <div class="hero-card">
+    <div class="special-badge">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      Special Offer
+    </div>
+    <h2 class="hero-title">Get Up To Ksh<br>{{ config.max_loan_amount|default:100000 }}</h2>
+    <p class="hero-subtitle">{{ config.hero_subtitle }}</p>
+  </div>
+
+  <div class="steps-row">
+    <div class="step-item">
+      <div class="step-circle">1</div>
+      <span class="step-label">Apply</span>
+    </div>
+    <div class="step-item">
+      <div class="step-circle">2</div>
+      <span class="step-label">Approve</span>
+    </div>
+    <div class="step-item">
+      <div class="step-circle">3</div>
+      <span class="step-label">Receive</span>
+    </div>
+  </div>
+
+  <a href="/apply" class="btn-primary">
+    Apply Now
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+  </a>
+
+  <div class="features-section">
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <div>
+        <div class="feature-title">Quick Approval</div>
+        <div class="feature-desc">Get pre-approved in minutes with our streamlined digital process.</div>
+      </div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+      </div>
+      <div>
+        <div class="feature-title">Flexible Terms</div>
+        <div class="feature-desc">Choose loan terms from 30 to 90 days that fit your budget.</div>
+      </div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </div>
+      <div>
+        <div class="feature-title">No Hidden Fees</div>
+        <div class="feature-desc">Transparent pricing with no surprises. Know exactly what you'll pay.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="trust-row">
+    <div class="trust-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      Secure
+    </div>
+    <div class="trust-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Licensed
+    </div>
+    <div class="trust-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      Encrypted
+    </div>
+  </div>
+
+  <div style="height:80px;"></div>
+</div>
+
+<footer class="footer">
+  <div class="footer-links">
+    <a href="/privacy">Privacy</a>
+    <a href="/terms">Terms</a>
+    <a href="/contact">Contact</a>
+  </div>
+</footer>
+{% endblock %}

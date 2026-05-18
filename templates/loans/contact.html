@@ -1,0 +1,33 @@
+{% extends 'loans/base.html' %}
+{% block title %}Contact Us | {{ config.site_name }}{% endblock %}
+{% block body %}
+<div class="page-wrapper">
+  <nav class="navbar">
+    <a href="/" class="navbar-brand">
+      <div class="brand-icon">T</div>
+      <span class="brand-name">{{ config.site_name }}</span>
+    </a>
+  </nav>
+  <div class="static-page">
+    <h2>Contact Us</h2>
+    <p>We are here to help. Reach out to us through any of the channels below.</p>
+    <h3>Email</h3>
+    <p>support@talamkopo.co.ke</p>
+    <h3>Phone</h3>
+    <p>+254 700 000 000 (Mon–Fri, 8am–6pm)</p>
+    <h3>Office</h3>
+    <p>Nairobi, Kenya<br>Licensed by the Central Bank of Kenya</p>
+    <h3>Response Time</h3>
+    <p>We respond to all inquiries within 24 hours on business days.</p>
+  </div>
+  <div style="height:80px;"></div>
+</div>
+<footer class="footer">
+  <div class="footer-links">
+    <a href="/privacy">Privacy</a>
+    <a href="/terms">Terms</a>
+    <a href="/contact">Contact</a>
+  </div>
+  <div class="footer-copy">{{ config.footer_text }}</div>
+</footer>
+{% endblock %}

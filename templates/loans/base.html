@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ config.site_name }} — Get Up To Ksh {{ config.max_loan_amount|default:100000 }} Fast{% endblock %}</title>
+    <meta name="description" content="Get fast loans up to Ksh {{ config.max_loan_amount|default:100000 }}. Quick approval, flexible terms, no hidden fees.">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    {% block body %}{% endblock %}
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

